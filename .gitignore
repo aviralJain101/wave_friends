@@ -1,0 +1,7 @@
+# dependencies
+/node_modules
+
+# Typescript build related
+build/
+
+.env

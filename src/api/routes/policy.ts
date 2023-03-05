@@ -1,5 +1,3 @@
-import fs from 'fs';
-import util from 'util';
 import { celebrate, Joi, Segments } from 'celebrate';
 import { Router, Request, Response, NextFunction } from 'express';
 import Container from 'typedi';
@@ -11,9 +9,6 @@ import S3Service from '../../services/s3';
 import SesService from '../../services/ses';
 import LoginService from '../../services/login';
 import errors from '../../utils/errors';
-
-const unlinkFile = util.promisify(fs.unlink); // To delete the file from local after uploading on s3
-const upload = multer({ dest: '/tmp/files/' }); // Only /tmp folder is writable in AWS Lambda environments
 
 const route = Router();
 
@@ -97,7 +92,7 @@ export default (app: Router): void => {
   //user multer middleware before celebrate
   route.post(
     '/uploadReading',
-    upload.single('readingImage'),
+    // upload.single('readingImage'),
     celebrate(postReadingInputSchema),
     async (req: Request, res: Response, next: NextFunction) => {
       req.log.apiName = 'POST-READING';
@@ -109,17 +104,17 @@ export default (app: Router): void => {
           readingValue: string;
         };
         const userId = await Container.get(LoginService).getUserId(authToken);
-        const file = req.file;
-        if (file === undefined) {
-          throw new errors.BadRequestError('Unable to get file');
-        }
-        const result = await Container.get(S3Service).uploadFileToBucket(file);
-        await unlinkFile(file.path);
-        const policy = await Container.get(PolicyService).addReading(userId, policyId, readingValue, result.Location);
-        if (policy.readings === undefined || policy.latestOdometerReading === undefined) {
-          throw new errors.BadRequestError('Unable to update item in DB');
-        }
-        res.status(200).json(policy);
+        // const file = req.file;
+        // if (file === undefined) {
+        //   throw new errors.BadRequestError('Unable to get file');
+        // }
+        // const result = await Container.get(S3Service).uploadFileToBucket(file);
+        // await unlinkFile(file.path);
+        // const policy = await Container.get(PolicyService).addReading(userId, policyId, readingValue, result.Location);
+        // if (policy.readings === undefined || policy.latestOdometerReading === undefined) {
+        //   throw new errors.BadRequestError('Unable to update item in DB');
+        // }
+        res.status(200)
       } catch (error) {
         next(error);
       }

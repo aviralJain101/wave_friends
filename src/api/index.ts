@@ -1,9 +1,9 @@
 import { Router } from 'express';
-import policy from './routes/policy';
+import user from './routes/user';
 
 // guaranteed to get dependencies
 export default (): Router => {
   const app = Router();
-  policy(app);
+  user(app)
   return app;
 };

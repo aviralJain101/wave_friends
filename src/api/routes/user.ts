@@ -31,6 +31,7 @@ export default (app: Router): void => {
 
   //Post api which creates a new user
   router.post('/', celebrate(postUserInputSchema), async (req: Request, res: Response, next: NextFunction) => {
+    req.log.apiName = 'POST-USER'
     try{
       const user = new User(req.body.user);
       await user.save()

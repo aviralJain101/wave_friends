@@ -10,7 +10,6 @@ import loadInterceptors from './interceptors';
 import getDbClient from './database';
 import expressLoader from './express';
 
-// Load everything common across lambda handlers here
 export default (app: express.Application): void => {
   // TODO: Add why we are doing below
   dayjs.extend(localizedFormat);

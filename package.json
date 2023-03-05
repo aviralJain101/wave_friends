@@ -4,7 +4,18 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "tsc",
+    "clean": "tsc --build --clean",
+    "start": "nodemon",
+    "inspect": "nodemon --inspect src/app.ts",
+    "test": "jest",
+    "lint": "npm run lint:js",
+    "lint:eslint": "eslint --ignore-path .gitignore --ext .js,.ts",
+    "lint:js": "npm run lint:eslint src/",
+    "lint:fix": "npm run lint:js -- --fix",
+    "update-layer": "copyfiles package.json ./node_modules_layer/nodejs && npm run pre-deploy",
+    "pre-deploy": "cd ./node_modules_layer/nodejs && npm install --production && cd ../..",
+    "deploy-dev": "npm run clean && npm run build && serverless deploy --stage dev"
   },
   "repository": {
     "type": "git",

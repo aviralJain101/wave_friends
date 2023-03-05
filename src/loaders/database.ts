@@ -8,6 +8,7 @@ const loadDb = async () => {
         useNewUrlParser:true,
         //useCreateIndex:true,
         useUnifiedTopology: true,
+        strictQuery: false,
         //useFindAndModify:false //to remove deoprecation warning while using find and modify
     })
     logger.info('Connected to MONGO DB Succesfully');

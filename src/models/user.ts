@@ -10,9 +10,14 @@ const userSchema = new Schema<IUser>({
     required: true,
   },
   location: {
-    latitude: String, 
-    longitude: String,
-    required: true,
+    latitude: {
+      type: String,
+      required: true
+    }, 
+    longitude: {
+      type: String,
+      required: true
+    },
   },
   gender: {
     type: String,

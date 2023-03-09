@@ -40,4 +40,22 @@ export default (app: Router): void => {
       next(error);
     }
   })
+
+  const getUserInpurSchema = {
+    [Segments.BODY]: {
+      authToken: Joi.string().min(2).required(),
+      policyId: Joi.string().required(),
+      readingValue: Joi.string().required(),
+    },
+  };
+  //Get api to get user details
+  router.get('/', celebrate(getUserInpurSchema), async (req: Request, res: Response, next: NextFunction) => {
+    //TODO: get user Id from AuthTOken
+    const userId = "";
+    try{
+      
+    } catch(error){
+      next(error);
+    }
+  })
 }

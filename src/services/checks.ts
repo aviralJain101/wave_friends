@@ -1,4 +1,4 @@
-import { Service } from 'typedi';
+import { Service } from '';
 import { PolicyModel } from '../interfaces/policyModel';
 
 function dateDiffInDays(lastReadingDateEpoch: number): number {

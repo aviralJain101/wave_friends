@@ -1,6 +1,5 @@
 import dayjs from 'dayjs';
 import express from 'express';
-import Container from 'typedi';
 import logger from './logger';
 import localizedFormat from 'dayjs/plugin/localizedFormat';
 import utc from 'dayjs/plugin/utc'; // dependent on utc plugin
@@ -18,10 +17,8 @@ export default (app: express.Application): void => {
   dayjs.extend(relativeTime);
   dayjs.tz.setDefault('Asia/Kolkata');
 
-  Container.set('logger', logger); // for logger dependency injections
-
   // Load database connection client
-  Container.set('db', getDbClient());
+  getDbClient();
   logger.debug('Database loaded');
 
   //Load Express

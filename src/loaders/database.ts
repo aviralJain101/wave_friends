@@ -4,11 +4,11 @@ import logger from './logger';
 
 const loadDb = async () => {
   logger.info('Connecting to DB = {}', config.mongoDBUrl)
+  mongoose.set("strictQuery", false);
   const connection = await mongoose.connect(config.mongoDBUrl,{
         useNewUrlParser:true,
         //useCreateIndex:true,
         useUnifiedTopology: true,
-        strictQuery: false,
         //useFindAndModify:false //to remove deoprecation warning while using find and modify
     })
     logger.info('Connected to MONGO DB Succesfully');

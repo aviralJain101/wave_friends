@@ -5,7 +5,6 @@ export default {
     getUserFromUserId: async function (userId: string): Promise<IUser | null> {
         try {
             const user = await User.findById(userId);
-
             return user;
         } catch (err) {
             console.error(err);

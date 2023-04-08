@@ -1,8 +1,9 @@
 import { celebrate, Joi, Segments } from 'celebrate';
 import { Router, Request, Response, NextFunction } from 'express';
-import IUser from '../../interfaces/user';
 import User from '../../models/user';
 import { Gender } from '../../utils/enums';
+import UserService from '../../services/user';
+import Errors from '../../utils/errors';
 
 const router = Router();
 
@@ -31,7 +32,7 @@ export default (app: Router): void => {
 
   //Post api which creates a new user
   router.post('/', celebrate(postUserInputSchema), async (req: Request, res: Response, next: NextFunction) => {
-    req.log.apiName = 'POST-USER'
+    req.log.apiName = 'POST-USER';
     try{
       const user = new User(req.body.user);
       await user.save()
@@ -50,10 +51,15 @@ export default (app: Router): void => {
   };
   //Get api to get user details
   router.get('/', celebrate(getUserInpurSchema), async (req: Request, res: Response, next: NextFunction) => {
+    req.log.apiName = 'GET-USER'
     //TODO: get user Id from AuthTOken
     const userId = "";
     try{
-      
+      const user = await UserService.getUserFromUserId(userId);
+      if(!user){
+        throw new Errors.NotFoundError("User Not found");
+      }
+      res.status(200).json(user);
     } catch(error){
       next(error);
     }

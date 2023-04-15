@@ -1,50 +1,60 @@
+interface Coordinates {
+  lat: number;
+  lng: number;
+}
+
 interface Circle {
-    lat: number;
-    lng: number;
-    radius: number;
-  }
+  center: Coordinates;
+  radius: number;
+}
+
+function match(lat1: number, lng1: number, rad1: number, lat2: number, lng2: number, rad2: number): boolean {
+  const circle1: Circle = {
+    center: { lat: lat1, lng: lng1 },
+    radius: rad1, // in meters
+  };
   
-  function circlesIntersect(circle1: Circle, circle2: Circle): boolean {
-    const distanceBetweenCenters = Math.sqrt(
-      (circle1.lat - circle2.lat) ** 2 + (circle1.lng - circle2.lng) ** 2
-    );
-  
-    if (distanceBetweenCenters > circle1.radius + circle2.radius) {
-      // Circles do not intersect
-      return false;
-    }
-  
-    const smallerCircle = circle1.radius < circle2.radius ? circle1 : circle2;
-    const largerCircle = smallerCircle === circle1 ? circle2 : circle1;
-  
-    const distanceFromSmallerToIntersection = (
-      smallerCircle.radius ** 2 -
-      largerCircle.radius ** 2 +
-      distanceBetweenCenters ** 2
-    ) / (2 * distanceBetweenCenters);
-  
-    if (smallerCircle.radius ** 2 - distanceFromSmallerToIntersection ** 2 < 0) {
-      // Circles do not intersect
-      return false;
-    }
-  
-    const intersectionX =
-      (smallerCircle.lat +
-        (distanceFromSmallerToIntersection * (largerCircle.lat - smallerCircle.lat)) /
-          distanceBetweenCenters) as number;
-    const intersectionY =
-      (smallerCircle.lng +
-        (distanceFromSmallerToIntersection * (largerCircle.lng - smallerCircle.lng)) /
-          distanceBetweenCenters) as number;
-  
-    // Check if the intersection point is inside both circles
-    const intersectionInCircle1 =
-      Math.sqrt((intersectionX - circle1.lat) ** 2 + (intersectionY - circle1.lng) ** 2) <=
-      circle1.radius;
-    const intersectionInCircle2 =
-      Math.sqrt((intersectionX - circle2.lat) ** 2 + (intersectionY - circle2.lng) ** 2) <=
-      circle2.radius;
-  
-    return intersectionInCircle1 && intersectionInCircle2;
-  }
-  
+  const circle2: Circle = {
+    center: { lat: lat2, lng: lng2 },
+    radius: rad2, // in meters
+  };
+  const centerDistance = getDistance(circle1.center, circle2.center);
+  return centerDistance <= circle1.radius && centerDistance <= circle2.radius;
+}
+
+function getDistance(coord1: Coordinates, coord2: Coordinates): number {
+  const R = 6371e3; // earth's radius in meters
+  const lat1 = (coord1.lat * Math.PI) / 180; // convert to radians
+  const lat2 = (coord2.lat * Math.PI) / 180;
+  const deltaLat = ((coord2.lat - coord1.lat) * Math.PI) / 180;
+  const deltaLng = ((coord2.lng - coord1.lng) * Math.PI) / 180;
+
+  const a =
+    Math.sin(deltaLat / 2) * Math.sin(deltaLat / 2) +
+    Math.cos(lat1) *
+      Math.cos(lat2) *
+      Math.sin(deltaLng / 2) *
+      Math.sin(deltaLng / 2);
+  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+
+  const distance = R * c; // distance in meters
+  return distance;
+}
+
+// // Example usage
+// const circle1: Circle = {
+//   center: { lat: 52.5200, lng: 13.4050 },
+//   radius: 1000, // in meters
+// };
+
+// const circle2: Circle = {
+//   center: { lat: 52.5171, lng: 13.4150 },
+//   radius: 500, // in meters
+// };
+
+// const overlap = isMatch(circle1, circle2);
+// console.log(overlap); // true if the two users overlap with each other
+
+export default {
+  match
+}

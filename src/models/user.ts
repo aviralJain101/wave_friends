@@ -11,11 +11,11 @@ const userSchema = new Schema<IUser>({
   },
   location: {
     latitude: {
-      type: String,
+      type: Number,
       required: true
     }, 
     longitude: {
-      type: String,
+      type: Number,
       required: true
     },
   },
@@ -25,7 +25,7 @@ const userSchema = new Schema<IUser>({
     required: true
   },
   acceptedRadius: {
-    type: Number,
+    type: Number, //in meters
     required: true
   }
 });

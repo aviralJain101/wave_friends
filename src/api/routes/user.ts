@@ -21,8 +21,8 @@ export default (app: Router): void => {
         name: Joi.string().required(),
         interests: Joi.array().min(1).items(Joi.string()).required(),
         location: Joi.object({
-          latitude: Joi.string().required(),
-          longitude: Joi.string().required()
+          latitude: Joi.number().required(),
+          longitude: Joi.number().required()
         }).required(),
         gender: Joi.string().valid(... Object.values(Gender)).required(),
         acceptedRadius: Joi.number().required()
@@ -45,8 +45,6 @@ export default (app: Router): void => {
   const getUserInpurSchema = {
     [Segments.BODY]: {
       authToken: Joi.string().min(2).required(),
-      policyId: Joi.string().required(),
-      readingValue: Joi.string().required(),
     },
   };
   //Get api to get user details

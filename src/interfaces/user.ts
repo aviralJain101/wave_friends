@@ -5,9 +5,9 @@ export default interface IUser{
   avatar?: string;
   interests: string[];
   location: {
-    latitude: string;
-    longitude: string;
+    latitude: number;
+    longitude: number;
   };
   gender: Gender;
-  acceptedRadius: number;
+  acceptedRadius: number; //in meters
 }

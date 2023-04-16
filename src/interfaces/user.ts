@@ -1,6 +1,8 @@
 import { Gender } from "../utils/enums";
+import { Document } from "mongoose";
 
-export default interface IUser{
+export default interface IUser extends Document{
+  _id?: string;
   name: string;
   avatar?: string;
   interests: string[];

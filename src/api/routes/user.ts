@@ -5,6 +5,7 @@ import { Gender } from '../../utils/enums';
 import UserService from '../../services/user';
 import Errors from '../../utils/errors';
 import authMiddleware from '../../middlewares/auth';
+import IUser from '../../interfaces/user';
 
 const router = Router();
 
@@ -39,13 +40,13 @@ export default (app: Router): void => {
     }
   })
 
-  const getUserInpurSchema = {
+  const getUserInputSchema = {
     [Segments.HEADERS]: Joi.object().keys({
       Authorization: Joi.string().min(2).required(),
     }).options({allowUnknown: true}),
   };
   //Get api to get user details
-  router.get('/', celebrate(getUserInpurSchema), authMiddleware.auth,  async (req: Request, res: Response, next: NextFunction) => {
+  router.get('/', celebrate(getUserInputSchema), authMiddleware.auth,  async (req: Request, res: Response, next: NextFunction) => {
     req.log.apiName = 'GET-USER'
     try{
       const user = req.user;
@@ -53,6 +54,26 @@ export default (app: Router): void => {
         throw new Errors.NotFoundError("User Not found");
       }
       res.status(200).json(user);
+    } catch(error){
+      next(error);
+    }
+  })
+
+  const matchUserInputSchema = {
+    [Segments.HEADERS]: Joi.object().keys({
+      Authorization: Joi.string().min(2).required(),
+    }).options({allowUnknown: true}),
+  };
+  //Get api to get user details
+  router.get('/match', celebrate(matchUserInputSchema), authMiddleware.auth,  async (req: Request, res: Response, next: NextFunction) => {
+    req.log.apiName = 'GET-MATCH'
+    try{
+      const user = req.user;
+      if(!user){
+        throw new Errors.NotFoundError("User Not found");
+      }
+      const users: IUser[] | null = await UserService.getUsersInYourRadius(user);
+      res.status(200).json(users);
     } catch(error){
       next(error);
     }

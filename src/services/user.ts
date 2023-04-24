@@ -2,19 +2,8 @@ import User from '../models/user';
 import IUser from '../interfaces/user';
 import matchService from './matchService';
 
-const getUserFromUserId = async function (userId: string): Promise<IUser | null> {
-    try {
-        const user = await User.findById(userId);
-        return user;
-    } catch (err) {
-        console.error(err);
-        return null;
-    }
-};
 
-const getUsersInYourRadius = async function (userId: string): Promise<IUser[] | null> {
-    //Get user from user Id
-    const myUser = await getUserFromUserId(userId);
+const getUsersInYourRadius = async function (myUser): Promise<IUser[] | null> {
     if(myUser == null){
         return null;
     }
@@ -37,6 +26,5 @@ const getUsersInYourRadius = async function (userId: string): Promise<IUser[] | 
 };
 
 export default {
-    getUserFromUserId,
     getUsersInYourRadius
 }

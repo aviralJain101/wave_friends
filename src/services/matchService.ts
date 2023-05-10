@@ -1,3 +1,6 @@
+import IUser from "../interfaces/user";
+import { Gender } from "../utils/enums";
+
 interface Coordinates {
   lat: number;
   lng: number;
@@ -8,7 +11,46 @@ interface Circle {
   radius: number;
 }
 
-function match(lat1: number, lng1: number, rad1: number, lat2: number, lng2: number, rad2: number): boolean {
+function matchScore(myUser: IUser, user: IUser): number {
+  if( matchByRadius(
+    myUser.location.latitude, 
+    myUser.location.longitude, 
+    myUser.acceptedRadius, 
+    user.location.latitude, 
+    user.location.longitude, 
+    user.acceptedRadius) == false
+    ||
+    matchByGender(myUser.gender, user.gender) == false ) {
+      return 0;
+    }
+    return getInterestsMatchScore(myUser.interests, user.interests) + 1;
+}
+
+//Functions to match user by Interests
+function countCommonElements(array1: string[], array2: string[]): number {
+  let count = 0;
+
+  for (const element of array1) {
+    if (array2.includes(element)) {
+      count++;
+    }
+  }
+
+  return count;
+}
+
+function getInterestsMatchScore(myUserInterests: string[], userInterests: string[]): number {
+  const numberOfCommonInterests: number = countCommonElements(myUserInterests, userInterests);
+  return numberOfCommonInterests;
+}
+
+//Function to match user by "Gender"
+function matchByGender(myUserGender: Gender, userGender: Gender): boolean {
+  return myUserGender === userGender;
+}
+
+//Functions to Match user by "Radius"
+function matchByRadius(lat1: number, lng1: number, rad1: number, lat2: number, lng2: number, rad2: number): boolean {
   const circle1: Circle = {
     center: { lat: lat1, lng: lng1 },
     radius: rad1, // in meters
@@ -56,5 +98,5 @@ function getDistance(coord1: Coordinates, coord2: Coordinates): number {
 // console.log(overlap); // true if the two users overlap with each other
 
 export default {
-  match
+  matchScore
 }

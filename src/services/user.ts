@@ -3,22 +3,19 @@ import IUser from '../interfaces/user';
 import matchService from './matchService';
 
 
-const getUsersInYourRadius = async function (myUser): Promise<IUser[] | null> {
+const getMatchedUsers = async function (myUser: IUser): Promise<{ user: IUser, matchScore: number }[] | null> {
     if(myUser == null){
         return null;
     }
-    var usersInRadius: IUser[] = [];
+    
+    const usersInRadius: { user: IUser, matchScore: number }[] = [];
+
     const users: IUser[] = await User.find();
     for(const user of users){
         if(myUser._id != user._id){
-            if(matchService.match(
-                myUser.location.latitude, 
-                myUser.location.longitude, 
-                myUser.acceptedRadius, 
-                user.location.latitude, 
-                user.location.longitude, 
-                user.acceptedRadius)){
-                    usersInRadius.push(user);
+            const matchScore = matchService.matchScore(myUser, user);
+            if(matchScore > 0){
+                    usersInRadius.push({user, matchScore});
                 }
         }
     }
@@ -26,5 +23,5 @@ const getUsersInYourRadius = async function (myUser): Promise<IUser[] | null> {
 };
 
 export default {
-    getUsersInYourRadius
+    getMatchedUsers
 }

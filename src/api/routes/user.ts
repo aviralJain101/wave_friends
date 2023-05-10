@@ -72,8 +72,8 @@ export default (app: Router): void => {
       if(!user){
         throw new Errors.NotFoundError("User Not found");
       }
-      const users: IUser[] | null = await UserService.getUsersInYourRadius(user);
-      res.status(200).json(users);
+      const matchedUsers: { user: IUser, matchScore: number }[] | null = await UserService.getMatchedUsers(user);
+      res.status(200).json(matchedUsers);
     } catch(error){
       next(error);
     }

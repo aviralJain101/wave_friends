@@ -12,7 +12,7 @@ const getMatchedUsers = async function (myUser: IUser): Promise<{ user: IUser, m
 
     const users: IUser[] = await User.find();
     for(const user of users){
-        if(myUser._id != user._id){
+        if(myUser._id?.toString() != user._id?.toString()){
             const matchScore = matchService.matchScore(myUser, user);
             if(matchScore > 0){
                     usersInRadius.push({user, matchScore});

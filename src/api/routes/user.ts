@@ -42,7 +42,7 @@ export default (app: Router): void => {
 
   const getUserInputSchema = {
     [Segments.HEADERS]: Joi.object().keys({
-      Authorization: Joi.string().min(2).required(),
+      authorization: Joi.string().min(2).required(),
     }).options({allowUnknown: true}),
   };
   //Get api to get user details
@@ -61,7 +61,7 @@ export default (app: Router): void => {
 
   const matchUserInputSchema = {
     [Segments.HEADERS]: Joi.object().keys({
-      Authorization: Joi.string().min(2).required(),
+      authorization: Joi.string().min(2).required(),
     }).options({allowUnknown: true}),
   };
   //Get api to get user details

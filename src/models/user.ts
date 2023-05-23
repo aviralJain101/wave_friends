@@ -3,7 +3,11 @@ import IUser from '../interfaces/user';
 import { Gender } from '../utils/enums';
 
 const userSchema = new Schema<IUser>({
-  name: { type: String, required: true },
+  name: { 
+    type: String, 
+    required: true,
+    unique: true, // TODO: remove this later
+  },
   avatar: String,
   interests: {
     type: [String],
